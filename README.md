@@ -21,6 +21,7 @@ Se realizaron los siguientes ajuste para no violar los principios de SOLID
 Se agrego Single Responsibility Principle para cumplier con la responsabilidad de que solo se tuviera que hacer un solo trabajo, Open/Closed Principle para que estuviera  abierto para posibles desarrollos nuevos pero a su vez cerrado para la modificación, Dependency Inversion Principle para que los módulos de alto nivel no dependadn de de módulos de bajo nivel, sino de abstracciones y Interface Segregation Principle  se ajusto para que use interfaces y sea mas facirl de entender el codigo. 
 El beneficio que llevarias seria tener un codigo mas legible e intentar respetar los principios de SOLID
 
+Se agregan carpetas Original y refactorizacion
 
 
 
