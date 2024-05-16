@@ -1,5 +1,7 @@
 class SystemManager {
+    
     processOrder(order) {
+        // 
         if (order.type == "standard") {
             verifyInventory(order);
             processStandardPayment(order);
@@ -7,6 +9,7 @@ class SystemManager {
             verifyInventory(order);
             processExpressPayment(order, "highPriority");
         }
+       
         updateOrderStatus(order, "processed");
         notifyCustomer(order);
     }
@@ -35,12 +38,10 @@ class SystemManager {
             throw new Error("Express payment failed");
         }
     }
-
     updateOrderStatus(order, status) {
         // Updates the order status in the database
         database.updateOrderStatus(order.id, status);
     }
-
     notifyCustomer(order) {
         // Sends an email notification to the customer
         emailService.sendEmail(order.customerEmail, "Your order has been processed.");

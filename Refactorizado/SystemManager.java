@@ -1,48 +1,107 @@
+
+import javax.management.Notification;
+import javax.swing.text.StyledEditorKit.BoldAction;
+
+enum OrderType {
+    STANDARD,
+    EXPRESS
+  }
 class SystemManager {
-    processOrder(order) {
-        if (order.type == "standard") {
-            verifyInventory(order);
-            processStandardPayment(order);
-        } else if (order.type == "express") {
-            verifyInventory(order);
-            processExpressPayment(order, "highPriority");
+
+    private OrderType enum;
+    private Payment payment;
+    private Notification notification;
+    private Repository repository;
+    private VerifyInventoryOrder verifyInventoryOrder;
+    
+    public void processOrder(Order order) {
+        verifyInventoryOrder.verifyInventory(order);
+        payment.processPayment(Order.type);
+        inventory.verifyInventory(order);
+        payment.processPayment(order);
+        inventory.updateOrderStatus(order, "processed");
+        notification.notifyCustomer(order);
+    }
+
+   private static PaymentProcessor processPayment(String type) {
+        switch (type) {
+        case OrderType.STANDARD:
+         new ProcessStandardPayment();
+         break;
+        case OrderType.EXPRESS:
+         new ProcessExpressPayment();
+         break;
+        default:
+         throw new Error("NOT FOUND ORDER TYPE");
         }
-        updateOrderStatus(order, "processed");
-        notifyCustomer(order);
+}
+
+private PaymentProcessor getPaymentProcessor(String type) {
+   
+}
+
     }
 
-    verifyInventory(order) {
-        // Checks inventory levels
-        if (inventory < order.quantity) {
-            throw new Error("Out of stock");
+    interface PaymentProcessor {
+        boolean processPayment(double amount);
+    }
+
+
+        class ProcessStandardPayment{
+            @Override
+            public boolean processStandardPayment(order) {
+            // Handles standard payment processing
+            if (paymentService.process(order.amount)) {
+                return true;
+            } else {
+                throw new Error("Payment failed");
+            }
+        }
+        }
+
+        class ProcessExpressPayment{
+            @Override
+            public boolean processExpressPayment(order) {
+            // Handles express payment processing
+            if (expressPaymentService.process(order.amount, "highPriority")) {
+                return true;
+            } else {
+                throw new Error("Express payment failed");
+            }
+        }
+        }
+    
+    
+    
+
+    interface VerifyInventory {
+        verifyInventory(order);
+    }
+    class VerifyInventoryOrder implements VerifyInventory{
+        verifyInventory(order) {
+            // Checks inventory levels
+            if (inventory < order.quantity) {
+                throw new Error("Out of stock");
+            }
         }
     }
+    interface Repository {
+        updateOrderStatus (order, status);
+    }
+    class RepositoryAdapter implements Repository{
+        updateOrderStatus (order, status) {
+        database.updateOrderStatus (order.id, status);
+    }
 
-    processStandardPayment(order) {
-        // Handles standard payment processing
-        if (paymentService.process(order.amount)) {
-            return true;
-        } else {
-            throw new Error("Payment failed");
+
+    interface Notification{
+        notifyCustomer (order);
+    }
+    class EmailNotifyCustomer implements notifyCustomer{
+      
+        notifyCustomer (order){
+            emailService.sendEmail(order.customerEmail, "Your order has been processed.");
         }
-    }
 
-    processExpressPayment(order, priority) {
-        // Handles express payment processing
-        if (expressPaymentService.process(order.amount, priority)) {
-            return true;
-        } else {
-            throw new Error("Express payment failed");
-        }
-    }
-
-    updateOrderStatus(order, status) {
-        // Updates the order status in the database
-        database.updateOrderStatus(order.id, status);
-    }
-
-    notifyCustomer(order) {
-        // Sends an email notification to the customer
-        emailService.sendEmail(order.customerEmail, "Your order has been processed.");
     }
 }
